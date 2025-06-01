@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 // Import necessary Firebase modules
-import { initializeApp } from "firebase/app";
+import { getApps, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
@@ -20,8 +20,24 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app); // 👈 initialize Firestore
-const analytics = getAnalytics(app);
+// const app = initializeApp(firebaseConfig);
+// const db = getFirestore(app); // 👈 initialize Firestore
+// const analytics = getAnalytics(app);
 
-export { db, analytics };
+// export { db, analytics };
+
+
+// Initialize only if not already initialized
+let app, db, analytics;
+
+export const connectFirebase = () => {
+  if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    analytics = getAnalytics(app);
+    console.log("✅ Firebase connected.");
+  } else {
+    console.log("⚠️ Firebase already initialized.");
+  }
+  return { db, analytics };
+};
